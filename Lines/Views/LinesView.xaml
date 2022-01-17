@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="Lines.Views.LinesView"
+             xmlns:ViewModels="clr-namespace:Lines.ViewModels"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Lines.Views"
+             xmlns:Shared="clr-namespace:Shared;assembly=Shared"
+             mc:Ignorable="d" 
+             xmlns:EventArgsConverters="clr-namespace:Lines.Converters"
+             xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <EventArgsConverters:MouseDownPositionEventArgConverter x:Key="MouseDownConverter" />
+    </UserControl.Resources>
+    
+        <Grid x:Name="MainGrid" Height="{Binding BoardHeight, UpdateSourceTrigger=PropertyChanged}" Width="{Binding BoardWidth, UpdateSourceTrigger=PropertyChanged}">
+        <Border BorderThickness="1" BorderBrush="Gray">
+            <behaviors:Interaction.Triggers>
+                <behaviors:EventTrigger EventName="MouseDown">
+                    <behaviors:InvokeCommandAction PassEventArgsToCommand="True" EventArgsConverter="{StaticResource MouseDownConverter}" EventArgsConverterParameter="{Binding ElementName=MainGrid}" Command="{Binding MouseDownCommand, UpdateSourceTrigger=PropertyChanged}"/>
+                </behaviors:EventTrigger>
+            </behaviors:Interaction.Triggers>
+        
+            <ItemsControl ItemsSource="{Binding Path=Vectors}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas Background="White"  />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                        <Line X1="{Binding APoint.X}" StrokeThickness="{Binding DataContext.Scale, ElementName=MainGrid}" X2="{Binding BPoint.X}" Y1="{Binding APoint.Y}" Y2="{Binding BPoint.Y}" Stroke="Black"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        </Border>
+
+    </Grid>
+</UserControl>
